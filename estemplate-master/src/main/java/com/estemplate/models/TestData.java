@@ -4,15 +4,22 @@ import com.estemplate.common.DocumentWrapper;
 
 public class TestData implements DocumentWrapper {
 	
-	private String user;
+	private String train;
 	private String postDate;
-	private String message;
+	private String status;
 	private String document_id;
-	public String getUser() {
-		return user;
+	
+	public String getTrain() {
+		return train;
 	}
-	public void setUser(String user) {
-		this.user = user;
+	public void setTrain(String train) {
+		this.train = train;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public String getPostDate() {
 		return postDate;
@@ -20,12 +27,7 @@ public class TestData implements DocumentWrapper {
 	public void setPostDate(String postDate) {
 		this.postDate = postDate;
 	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
+	
 	public String getDocument_id() {
 		return document_id;
 	}

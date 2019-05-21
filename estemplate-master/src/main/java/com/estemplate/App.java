@@ -11,9 +11,12 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 
 import com.estemplate.dao.EsTemplate;
 import com.estemplate.models.TestData;
@@ -49,9 +52,22 @@ public class App {
 		EsTemplate template = new EsTemplate(restClient);
 		
 		TestData data = new TestData();
-		data.setMessage("Test data for ES at"+System.currentTimeMillis());
+		data.setTrain("Rajdhani");
 		data.setPostDate("2019-05-21");
-		data.setUser("Abhishek Aggarwal");
+		data.setStatus("Cancelled");
 		template.indexDocument(data, "posts", "post", null);
+		
+		TestData data1 = new TestData();
+		data1.setTrain("Rajdhani");
+		data1.setPostDate("2019-05-22");
+		data1.setStatus("Completed");
+		template.indexDocument(data1, "posts", "post", null);
+		
+		TermsAggregationBuilder parentAggregation = AggregationBuilders.terms("by_train").field("train");
+		parentAggregation.subAggregation(AggregationBuilders.terms("by_status").field("status"));
+		parentAggregation.subAggregation(AggregationBuilders.topHits("by_top_train").size(1));
+		parentAggregation.subAggregation(AggregationBuilders.count("by_count").field("postDate"));
+		
+		SearchResponse response = template.querywithAggregation(null, parentAggregation, 0, 0, "posts");
 	}
 }
